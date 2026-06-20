@@ -9,23 +9,20 @@ const LatestCollection = () => {
   const { products } = useContext(ShopContext);
   const [latestProducts, setLatestProducts] = useState([]);
 
-  const newProduct = products.filter(item => (item.bestseller !== true));
-  // console.log(newProduct);
-
-
   useEffect(() => {
     if (products && products.length > 0) {
-      const newProduct = products.filter(item => (item.bestseller !== true));
-      const bags = newProduct.filter(item => item.category === "Bags").slice(0, 1); //1
-      const women = newProduct.filter(item => item.category === "Women").slice(2, 4);
-      const men = newProduct.filter(item => item.category === "Men").slice(1, 2);//1
-      const kids = newProduct.filter(item => item.category === "Kids").slice(1, 3);
+      const filtered = products
+        .filter(item => item.bestseller !== true)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-      setLatestProducts([...bags , ...women , ...men , ...kids])
+      const bags = filtered.filter(item => item.category === "Bags").slice(0, 1);
+      const women = filtered.filter(item => item.category === "Women").slice(0, 2);
+      const men = filtered.filter(item => item.category === "Men").slice(0, 2);
+      const kids = filtered.filter(item => item.category === "Kids").slice(0, 1);
 
+      setLatestProducts([...bags, ...women, ...men, ...kids]);
     }
-
-  }, [])
+  }, [products])
 
   return (
     <div className='my-10'>
@@ -44,4 +41,4 @@ const LatestCollection = () => {
   )
 }
 
-export default LatestCollection
+export default LatestCollection;

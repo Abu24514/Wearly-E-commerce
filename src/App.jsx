@@ -5,10 +5,11 @@ import Signup from './pages/Signup'
 import MainRoutes from './routes/MainRoutes'
 import ScrollToTop from './components/ScrollToTop'
 import NotFound from './pages/NotFound'
-
+import {Toaster} from 'react-hot-toast'
 const App = () => {
   return (
     <div>
+   <Toaster/>
       <ScrollToTop />
       <Routes>
         <Route path='/login' element={<Login />} />

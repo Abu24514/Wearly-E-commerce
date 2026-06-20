@@ -13,13 +13,13 @@ const BestSeller = () => {
             const bestProduct = products.filter((item) => item.bestseller);
 
             const bags = bestProduct.filter(item => item.category === "Bags").slice(0, 2);
-            const women = bestProduct.filter(item => item.category === "Women").slice(2, 4);
+            const women = bestProduct.filter(item => item.category === "Women").slice(0, 2);
             const men = bestProduct.filter(item => item.category === "Men").slice(0, 2);
             const kids = bestProduct.filter(item => item.category === "Kids").slice(0, 2);
 
             setBestSeller([...bags, ...women, ...men, ...kids]);
         }
-    }, []) 
+    }, [products]) 
 
     return (
         <div className='my-10'>

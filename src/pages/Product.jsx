@@ -71,6 +71,7 @@ const Product = () => {
             </div>
           </div>
           <Button
+            to="/cart"
             onClick={handleAddToCart}
             content="Add to Cart"
             BgColor="#000"
