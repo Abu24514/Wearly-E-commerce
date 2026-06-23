@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { PiCrown } from "react-icons/pi";
 import authImg from "../assets/auth-signup.png";
 import { AuthContext } from "../context/AuthContext";
-
+import toast from "react-hot-toast"
+import userAxios from "../configs/api";
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -16,18 +17,21 @@ const Signup = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    login('mock-token-123', {
-      name: formData.name,
-      email: formData.email
-    });
-    navigate('/');
+    try {
+      const { data } = await userAxios.post('/api/user/register', formData);
+      console.log(data);
+      login(data.user);
+      navigate('/login');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Signup failed')
+    }
   };
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-6">
-      <div className="grid lg:grid-cols-2 border border-neutral-200 rounded-3xl overflow-hidden min-h-screen lg:min-h-0 lg:h-[92vh] bg-white">
+   <section className="max-w-6xl mx-auto px-4 md:py-6 py-2 min-h-screen flex items-start pt-24">
+     <div className="grid lg:grid-cols-2 border border-neutral-200 rounded-3xl overflow-hidden lg:min-h-0 lg:h-[92vh] bg-white w-full">
 
         {/* Left Image */}
         <div className="hidden lg:block">
@@ -35,20 +39,22 @@ const Signup = () => {
         </div>
 
         {/* Right Side */}
-        <div className="flex items-center justify-center p-6 sm:p-8 lg:p-10 overflow-y-auto">
+     <div className="flex items-center justify-center p-6 sm:p-8 lg:p-10">
           <div className="w-full max-w-md">
 
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 border border-neutral-200 rounded-full px-3 py-1.5">
+            <div className="inline-flex  items-center gap-2 border border-neutral-200 rounded-full px-3 py-1.5">
               <PiCrown size={14} />
               <span className="text-xs font-medium">Wearly Account</span>
             </div>
 
             {/* Heading */}
-            <h1 className="font-display text-3xl sm:text-4xl mt-4">Create Account</h1>
-            <p className="text-neutral-500 mt-2 text-sm leading-relaxed">
+           
+             <h1 className="font-display text-3xl sm:text-4xl mt-4">Create Account</h1>
+            <p className="text-neutral-500 mt-2 text-sm leading-relaxed hidden md:block">
               Join Wearly today and discover timeless fashion, exclusive collections, and a seamless shopping experience.
             </p>
+          
 
             {/* Form */}
             <form onSubmit={handleSignup} className="mt-6 space-y-4">

@@ -5,7 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import authImg from "../assets/auth-login.png";
 import { PiCrown } from "react-icons/pi";
 import { AuthContext } from "../context/AuthContext";
-
+import userAxios from "../configs/api";
+import toast from "react-hot-toast"
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -16,18 +17,42 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    login('mock-token-123', {
-      name: formData.email.split('@')[0],
-      email: formData.email
-    });
-    navigate('/');
+    try {
+      const { data } = await userAxios.post('/api/user/login', formData);
+      login(data.user);
+      navigate('/');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Login failed')
+    }
   };
 
+const forgotPass = () => {
+    const lines = [
+        { text: "Password bhul gaya? 😒", duration: 1800, delay: 1500 },
+        { text: "Haan... password...", duration: 1800, delay: 1500 },
+        { text: "Bhul gaya 💀", duration: 1500, delay: 1200 },
+        { text: "Per use toh nahi bhula na? 😁", duration: 2100, delay: 1800 },
+        { text: "Forget password ka option nahi hai...", duration: 2000, delay: 1800 },
+        { text: "Jaise tu nahi tha uski life mein 🪦", duration: 3500, delay: 0 },
+    ]
+
+    let i = 0;
+    const showNext = () => {
+        if (i < lines.length) {
+            const { text, duration, delay } = lines[i]
+            toast(text, { duration })
+            i++
+            if (delay) setTimeout(showNext, delay)
+        }
+    }
+    showNext()
+}
+
   return (
-    <section className="max-w-6xl mx-auto px-4 py-6">
-      <div className="grid lg:grid-cols-2 border border-neutral-200 rounded-3xl overflow-hidden min-h-screen lg:min-h-0 lg:h-[92vh] bg-white">
+    <section className="max-w-6xl mx-auto px-4 md:py-6 py-2 min-h-screen flex items-start pt-24">
+    <div className="grid lg:grid-cols-2 border border-neutral-200 rounded-3xl overflow-hidden lg:min-h-0 lg:h-[92vh] bg-white w-full">
 
         {/* Left Side */}
         <div className="flex items-center justify-center p-6 sm:p-8 lg:p-10 overflow-y-auto">
@@ -41,7 +66,7 @@ const Login = () => {
 
             {/* Heading */}
             <h1 className="font-display text-3xl sm:text-4xl mt-4">Welcome Back</h1>
-            <p className="text-neutral-500 mt-2 text-sm leading-relaxed">
+            <p className="text-neutral-500 mt-2 text-sm leading-relaxed hidden md:block">
               Sign in to manage your orders, wishlist, and continue shopping with Wearly.
             </p>
 
@@ -81,7 +106,9 @@ const Login = () => {
               </div>
 
               <div className="flex justify-end">
-                <button type="button" className="text-xs text-neutral-500 hover:text-black">
+                <button 
+                onClick={forgotPass}
+                type="button" className="text-xs text-neutral-500 hover:text-black">
                   Forgot Password?
                 </button>
               </div>

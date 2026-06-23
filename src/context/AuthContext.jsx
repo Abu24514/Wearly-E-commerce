@@ -1,22 +1,39 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
+import userAxios from '../configs/api'
 
-export const AuthContext = createContext()
+export const AuthContext = createContext();
 
 const AuthContextProvider = ({ children }) => {
-    const [token, setToken] = useState('')
+    
     const [user, setUser] = useState(null)
+    const [loading, setLoading] = useState(true)
 
-    const login = (tokenValue, userData) => {
-        setToken(tokenValue)
+    useEffect(() => {
+        const getMe = async () => {
+            try {
+                const { data } = await userAxios.get('/api/user/me')
+                setUser(data.user)
+            } catch (error) {
+                setUser(null)
+            } finally {
+                setLoading(false)
+            }
+        }
+        getMe()
+    }, [])
+
+    const login = (userData) => {
         setUser(userData)
     }
 
-    const logout = () => {
-        setToken('')
+    const logout = async () => {
+        await userAxios.post('/api/user/logout')
         setUser(null)
     }
 
-    const value = { token, user, login, logout }
+    if (loading) return null
+
+    const value = { user, login, logout }
 
     return (
         <AuthContext.Provider value={value}>
