@@ -36,7 +36,7 @@ const Cart = () => {
           const productData = products.find(
             (product) => product._id === item._id
           );
-
+if (!productData) return null;
           return (
             <div
               key={index}
@@ -121,8 +121,8 @@ const Cart = () => {
 
         <div className="w-full sm:w-105 border border-neutral-300 rounded-3xl p-6">
           <h3 className="font-display text-2xl">
-                Cart Totals
-            </h3>
+            Cart Totals
+          </h3>
           <CardTotals />
 
           <button
