@@ -8,7 +8,7 @@ const LeftPart = () => {
   const [showFilter, setShowFilter] = useState(false);
 
 
-  const toggleCategory = (e) => {
+    const toggleCategory = (e) => {
     //   console.log(e.target.value);
     //  prev mean current state
     if (category.includes(e.target.value)) {
@@ -177,5 +177,4 @@ const LeftPart = () => {
     </div>
   );
 };
-
 export default LeftPart;
