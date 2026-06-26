@@ -12,13 +12,9 @@ const Orders = () => {
   const loadOrderData = async () => {
     try {
       const { data } = await userAxios.post('/api/order/userorders');
-      // console.log(data.orders);
-
       if (data.success) {
         const allOrdersItem = []
         data?.orders?.map((order) => {
-          // console.log("order" , order);
-
           order?.items?.map((item) => {
             item['status'] = order.status
             item['payment'] = order.payment
@@ -44,7 +40,7 @@ const Orders = () => {
       <div className="space-y-5 mt-10">
         {orderData.map((item) => (
           <div
-            key={item.id}
+            key={item._id}
             className="border border-neutral-200 rounded-3xl p-5 hover:border-neutral-300 transition-colors"
           >
             <div className="flex flex-col lg:flex-row gap-5 lg:items-center">
