@@ -21,7 +21,6 @@ const PlaceOrder = () => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      // cart items array banao
       const orderItems = [];
       for (const items in cartItems) {
         for (const item in cartItems[items]) {
@@ -36,15 +35,11 @@ const PlaceOrder = () => {
           }
         }
       }
-      // console.log(orderItems);
-
-
       const orderData = {
         address: formData,
         items: orderItems,
         amount: getCartAmount() + delivery_fee,
       };
-      // console.log(orderData);
 
       switch (method) {
         case 'COD':
@@ -57,12 +52,20 @@ const PlaceOrder = () => {
             toast.error(data.message);
           }
           break;
+        case 'Stripe':
+          const responseStripe = await userAxios.post('/api/order/stripe', orderData);
+          if (responseStripe.data.success) {
+            const { session_url } = responseStripe.data;
+            window.location.replace(session_url)
+          } else {
+            toast.error(responseStripe.data.message)
+          }
+          break;
+
         default:
           break;
       }
-
-
-
+      
     } catch (error) {
       toast.error(error.message);
     }
@@ -103,14 +106,17 @@ const PlaceOrder = () => {
             <div className="lg:hidden mt-4">
               <h4 className="font-medium mb-4">Payment Method</h4>
               <div className="flex flex-wrap gap-3">
+                {/* Stripe */}
                 <label className="flex items-center gap-2 border border-neutral-300 rounded-xl p-4 cursor-pointer hover:border-black transition-colors">
                   <input type="radio" name="payment" value="Stripe" onChange={(e) => setMethod(e.target.value)} />
                   <img className="h-5 object-contain" src={assets.stripe_logo} alt="Stripe" />
                 </label>
+                {/* Razorpay */}
                 <label className="flex items-center gap-2 border border-neutral-300 rounded-xl p-4 cursor-pointer hover:border-black transition-colors">
                   <input type="radio" name="payment" value="Razorpay" onChange={(e) => setMethod(e.target.value)} />
                   <img className="h-5 object-contain" src={assets.razorpay_logo} alt="Razorpay" />
                 </label>
+                {/* COD*/}
                 <label className="flex items-center gap-2 border border-neutral-300 rounded-xl p-4 cursor-pointer hover:border-black transition-colors">
                   <input type="radio" name="payment" value="COD" defaultChecked onChange={(e) => setMethod(e.target.value)} />
                   <span className="text-sm font-medium">Cash On Delivery</span>
