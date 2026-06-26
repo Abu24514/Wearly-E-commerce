@@ -11,6 +11,7 @@ import Orders from '../pages/Orders'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import SearchBar from '../components/SearchBar'
+import Verify from '../pages/Verify'
 
 const MainRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const MainRoutes = () => {
           <Route path='/cart' element={<Cart />} />
           <Route path='/place-order' element={<PlaceOrder />} />
           <Route path='/orders' element={<Orders />} />
+          <Route path='/verify' element={<Verify />} />
           <Route path='*' element={<Navigate to='/404' replace />} />
         </Routes>
       </div>
