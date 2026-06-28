@@ -4,23 +4,20 @@ import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import Button from "../components/Button";
 import RelatedProduct from "../components/RelatedProduct";
-
+import ProductDetailSkeleton from "../components/Skeletons/ProductDetailSkeleton";
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, cartItems, addToCart } = useContext(ShopContext);
+  const { products, currency, cartItems, addToCart, isLoading } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
   const [size, setSize] = useState('')
 
-  const fetchProductData = async () => {
-    products.map((item) => {
-      if (item._id === productId) {
-        setProductData(item);
-        setImage(item.image[0]);
-        // console.log(item);
-        return null;
-      }
-    });
+  const fetchProductData = () => {
+    const product = products.find((item) => item._id === productId);
+    if (product) {
+      setProductData(product);
+      setImage(product.image[0]);
+    }
   };
   const handleAddToCart = () => {
     if (!size) {
@@ -33,7 +30,9 @@ const Product = () => {
   useEffect(() => {
     fetchProductData();
   }, [productId, products]);
-  return productData ? (
+  return isLoading || !productData ? (
+    <ProductDetailSkeleton />
+  ) : (
     <div className="pt-10 transition-opacity ease-in duration-500 opacity-100">
       {/* Product Data */}
       <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row">
@@ -104,8 +103,6 @@ const Product = () => {
       {/* Display related Products */}
       <RelatedProduct category={productData.category} subCategory={productData.subCategory} />
     </div>
-  ) : (
-    <div className="opacity-0"></div>
   );
 };
 

@@ -4,10 +4,11 @@ import { TbShoppingCartHeart } from "react-icons/tb";
 import { FiTrash2 } from "react-icons/fi";
 import SecondHanding from "../components/SecondHanding";
 import CardTotals from "../components/CardTotals";
+import CartSkeleton from "../components/Skeletons/CartSkeleton"
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
+  const { products, currency, cartItems, updateQuantity, navigate, isLoading } = useContext(ShopContext);
 
-  const [cartData, setCartData] = useState([]);
+ const [cartData, setCartData] = useState([]);
   const cartTotal = 12;
   useEffect(() => {
     const tempData = [];
@@ -24,6 +25,13 @@ const Cart = () => {
     }
     setCartData(tempData);
   }, [cartItems]);
+
+  if (isLoading) return (
+    <div className="mt-8 sm:mt-15">
+      <CartSkeleton />
+    </div>
+  );
+
   return cartData.length > 0 ? (
     <div className="mt-8 sm:mt-15">
       <SecondHanding
@@ -36,7 +44,7 @@ const Cart = () => {
           const productData = products.find(
             (product) => product._id === item._id
           );
-if (!productData) return null;
+          if (!productData) return null;
           return (
             <div
               key={index}

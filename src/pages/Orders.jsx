@@ -4,12 +4,15 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import SecondHanding from "../components/SecondHanding";
 import { RiProductHuntLine } from "react-icons/ri";
 import { ShopContext } from '../context/ShopContext'
+import OrdersSkeleton from "../components/Skeletons/OrdersSkeleton";
 import userAxios from "../configs/api";
 
 const Orders = () => {
   const { currency } = useContext(ShopContext);
   const [orderData, setOrderData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const loadOrderData = async () => {
+    setIsLoading(true);
     try {
       const { data } = await userAxios.post('/api/order/userorders');
       if (data.success) {
@@ -29,10 +32,19 @@ const Orders = () => {
     } catch (error) {
       console.log(error)
     }
+    finally {
+      setIsLoading(false);
+    }
   }
   useEffect(() => {
     loadOrderData()
   }, [])
+  
+    if (isLoading) return (
+    <section className="max-w-6xl mx-auto px-4 py-10">
+      <OrdersSkeleton />
+    </section>
+  );
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-10">
