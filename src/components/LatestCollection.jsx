@@ -3,10 +3,11 @@ import Heading from './Heading'
 import { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import ProductItem from './ProductItem'
+import ProductItemSkeleton from './Skeletons/ProductItemSkeleton'
 
 
 const LatestCollection = () => {
-  const { products } = useContext(ShopContext);
+  const { products, isLoading } = useContext(ShopContext);
   const [latestProducts, setLatestProducts] = useState([]);
 
   useEffect(() => {
@@ -31,10 +32,14 @@ const LatestCollection = () => {
       </div>
       {/* rendering */}
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 gap-y-5'>
-        {latestProducts.map((item, index) => (
-          <ProductItem key={index} id={item._id} image={item.image} name={item.name} price={item.price} bestseller={item.bestseller} />
-        ))}
-
+        {isLoading
+          ? [...Array(6)].map((_, i) => (
+            <ProductItemSkeleton key={i} />
+          ))
+          : latestProducts.map((item, index) => (
+            <ProductItem key={index} id={item._id} image={item.image} name={item.name} price={item.price} bestseller={item.bestseller} />
+          ))
+        }
       </div>
       <div className="h-px  bg-neutral-200 sm:mt-25 mt-15" />
     </div>

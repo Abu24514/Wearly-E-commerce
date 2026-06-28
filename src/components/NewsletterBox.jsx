@@ -1,6 +1,7 @@
 import newImg from '../assets/message-img-2.webp'
+import ImageWithSkeleton from '../components/Skeletons/ImageWithSkeleton'
 const NewsletterBox = () => {
-    const onSubmitHandler = (event)=>{
+    const onSubmitHandler = (event) => {
         event.preventDefault();
     }
     return (
@@ -18,18 +19,21 @@ const NewsletterBox = () => {
                     </p>
                 </div>
                 {/* form*/}
-                <form 
-                onSubmit ={onSubmitHandler}
-                className='md:mt-10 mt-5 flex gap-x-3 md:gap-x-6 '>
+                <form
+                    onSubmit={onSubmitHandler}
+                    className='md:mt-10 mt-5 flex gap-x-3 md:gap-x-6 '>
                     <input type="email"
                         placeholder="Enter your email address" className='md:w-80 w-60 bg-[#E8E8E8] text-gray-700 py-3 md:px-4 px-3 rounded outline-none border-none text-[15px] md:text-xl tracking-wide' />
                     <button className=' bg-black text-white py-3 md:px-3 px-2 rounded outline-0 border-0 text-[15px] md:text-xl active:scale-90 '>Subscribe</button>
                 </form>
             </div>
             {/* image */}
-            <div className='w-full h-100 object-center'>
-                <img className='object-cover w-full h-full ' src={newImg} alt="newImg" />
-            </div>
+            <ImageWithSkeleton
+                src={newImg}
+                alt="newsletter"
+                containerClassName="w-full h-100"
+                className="object-cover w-full h-full"
+            />
         </section>
     )
 }

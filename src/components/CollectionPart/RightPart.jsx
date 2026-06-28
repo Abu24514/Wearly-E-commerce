@@ -2,9 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../../context/ShopContext";
 import ProductItem from "../ProductItem";
 import CustomDrop from "./CustomDrop";
+import ProductItemSkeleton from "../Skeletons/ProductItemSkeleton";
 
 const RightPart = () => {
-    const { filterProducts, search } = useContext(ShopContext);
+    const { filterProducts, search, isLoading } = useContext(ShopContext);
     const [currentPage, setCurrentPage] = useState(1);
 
     const productsPerPage = 8;
@@ -38,7 +39,13 @@ const RightPart = () => {
 
             {/* Product Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-8">
-                {currentProducts.length > 0 ? (
+                {isLoading ? (
+
+                    [...Array(8)].map((_, i) => (
+                        <ProductItemSkeleton key={i} />
+                    )
+                    )
+                ) : currentProducts.length > 0 ? (
                     currentProducts.map((item) => (
                         <ProductItem
                             key={item._id}

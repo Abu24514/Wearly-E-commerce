@@ -5,7 +5,7 @@ const Hero = () => {
     return (
         <section
             style={{ backgroundImage: `url(${HeroImg})` }}
-            className='relative w-full h-120 md:h-155.5 bg-cover bg-center bg-no-repeat'
+            className='relative w-full h-120 md:h-155.5 bg-cover bg-center bg-no-repeat bg-gray-300'
         >
             {/* Overlay */}
             <div className="absolute inset-0 bg-black/20" />
