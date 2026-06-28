@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
+    const [isLoading, setIsLoading] = useState(false);
     const [category, setCategory] = useState([]);
     const [subcategory, setSubCategory] = useState([]);
     const [filterProducts, setFilterProducts] = useState([]);
@@ -21,6 +22,7 @@ const ShopContextProvider = (props) => {
     // -------------------- Products --------------------
 
     const getProductData = async () => {
+         setIsLoading(true);
         try {
             const { data } = await userAxios.get('/api/product/list');
             if (data.success) {
@@ -31,6 +33,9 @@ const ShopContextProvider = (props) => {
         } catch (error) {
             toast.error(error.message);
         }
+         finally {
+        setIsLoading(false);  
+    }
     }
 
     // -------------------- Filters --------------------
@@ -167,7 +172,7 @@ const ShopContextProvider = (props) => {
         filterProducts, setFilterProducts, applyFilter,
         search, setSearch, showSearch, setShowSearch,
         cartItems, setCartItem, addToCart, getCartCount, updateQuantity, getCartAmount,
-        navigate
+        navigate, isLoading
     };
 
     return (
