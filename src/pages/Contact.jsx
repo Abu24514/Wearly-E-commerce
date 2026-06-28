@@ -1,4 +1,4 @@
-import contactImg from "../assets/contact.avif";
+import contactImg from "../assets/contact.png";
 import { MdOutlineContactSupport } from "react-icons/md";
 import {
   IoMailOutline,
@@ -12,6 +12,7 @@ import { LuTag, LuUser, LuPencil, LuMessageSquare } from "react-icons/lu";
 import Button from "../components/Button";
 import { AiOutlineContacts } from "react-icons/ai";
 import SecondHanding from "../components/SecondHanding";
+import ImageWithSkeleton from "../components/Skeletons/ImageWithSkeleton";
 
 const Contact = () => {
   const data = [
@@ -113,13 +114,12 @@ const Contact = () => {
         </div>
 
         {/* Right: Image */}
-        <div className="rounded-2xl overflow-hidden h-150 lg:min-h-0">
-          <img
-            src={contactImg}
-            alt="Contact Wearly"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <ImageWithSkeleton
+          src={contactImg}
+          alt="Contact Image"
+          containerClassName="rounded-2xl overflow-hidden h-150 lg:min-h-0"
+          className="w-full h-full object-cover"
+        />
       </div>
 
       {/* Info Strip */}

@@ -5,6 +5,7 @@ import SecondHanding from "../components/SecondHanding";
 import FeatureCard from "../components/FeatureCard";
 import Stats from "../components/Stats";
 import Closing from "../components/Closing";
+import ImageWithSkeleton from "../components/Skeletons/ImageWithSkeleton";
 
 const About = () => {
   const values = [
@@ -47,13 +48,12 @@ const About = () => {
 
       {/* Story Section */}
       <div className="grid grid-cols-1 lg:grid-cols-[50%_48%] gap-12 lg:gap-20 items-center mt-24">
-        <div className="overflow-hidden rounded-3xl">
-          <img
+        <ImageWithSkeleton
             src={aboutImg}
             alt="Wearly Fashion"
+            containerClassName="overflow-hidden rounded-3xl"
             className="w-full h-87.5 sm:h-112.5 lg:h-150 object-cover hover:scale-105 transition-transform duration-700"
           />
-        </div>
 
         <div className="max-w-lg">
           <p className="uppercase tracking-[0.2em] text-neutral-500 text-sm">
