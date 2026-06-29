@@ -1,45 +1,66 @@
 import contactImg from "../assets/contact.png";
-import { MdOutlineContactSupport } from "react-icons/md";
 import {
   IoMailOutline,
   IoCallOutline,
   IoLocationOutline,
-  IoSendOutline,
   IoLockClosedOutline,
 } from "react-icons/io5";
-import { FaArrowRightLong } from "react-icons/fa6";
 import { LuTag, LuUser, LuPencil, LuMessageSquare } from "react-icons/lu";
 import Button from "../components/Button";
 import { AiOutlineContacts } from "react-icons/ai";
 import SecondHanding from "../components/SecondHanding";
 import ImageWithSkeleton from "../components/Skeletons/ImageWithSkeleton";
+import { useState } from "react";
+import userAxios from "../configs/api";
+import toast from "react-hot-toast";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '', email: '', subject: '', message: ''
+  });
+  const [loading, setLoading] = useState(false);
+
   const data = [
     { id: 1, text: 'Email', para: 'support@wearly.com', icon: <IoMailOutline size={18} /> },
     { id: 2, text: 'Phone', para: '+91 0123456789', icon: <IoCallOutline size={18} /> },
     { id: 3, text: 'Address', para: 'Lucknow, Uttar Pradesh', icon: <IoLocationOutline size={18} /> }
+  ];
 
-  ]
-  console.log(data[0].text);
+  const onChangeHandler = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { data } = await userAxios.post('/api/contact', formData);
+      if (data.success) {
+        toast.success("Message sent successfully!");
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="px-6 sm:px-10 lg:px-16 py-16 sm:py-20">
 
-      {/* heading */}
       <SecondHanding
         icon={<AiOutlineContacts size={14} />}
         text="Contact Wearly"
         title=" We'd Love To Hear From You"
-        para=" Have a question, suggestion, or need assistance? Our team is here
-          to help and will get back to you as soon as possible."
+        para=" Have a question, suggestion, or need assistance? Our team is here to help and will get back to you as soon as possible."
       />
 
-      {/* Main Grid — Form + Image */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch sm:mt-15 mt-10">
         {/* Left: Form */}
         <div className="border border-neutral-200 rounded-2xl p-7 flex flex-col">
-          {/* Section Label */}
           <div className="flex items-center gap-2 mb-5">
             <LuPencil size={12} className="text-neutral-400" />
             <span className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-neutral-500">
@@ -48,69 +69,87 @@ const Contact = () => {
             <div className="flex-1 h-px bg-neutral-100" />
           </div>
 
-          {/* Name + Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
+          <form onSubmit={onSubmitHandler} className="flex flex-col flex-1">
+            {/* Name + Email */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-neutral-500">
+                  <LuUser size={12} /> Full name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={onChangeHandler}
+                  required
+                  placeholder="John Doe"
+                  className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-black transition-colors placeholder-neutral-400"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-neutral-500">
+                  <IoMailOutline size={13} /> Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={onChangeHandler}
+                  required
+                  placeholder="you@email.com"
+                  className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-black transition-colors placeholder-neutral-400"
+                />
+              </div>
+            </div>
+
+            {/* Subject */}
+            <div className="flex flex-col gap-2 mt-4">
               <label className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-neutral-500">
-                <LuUser size={12} /> Full name
+                <LuTag size={12} /> Subject
               </label>
               <input
                 type="text"
-                placeholder="John Doe"
+                name="subject"
+                value={formData.subject}
+                onChange={onChangeHandler}
+                required
+                placeholder="What's this about?"
                 className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-black transition-colors placeholder-neutral-400"
               />
             </div>
-            <div className="flex flex-col gap-2">
+
+            {/* Message */}
+            <div className="flex flex-col gap-2 mt-4 flex-1">
               <label className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-neutral-500">
-                <IoMailOutline size={13} /> Email
+                <LuMessageSquare size={12} /> Message
               </label>
-              <input
-                type="email"
-                placeholder="you@email.com"
-                className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-black transition-colors placeholder-neutral-400"
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={onChangeHandler}
+                required
+                rows={6}
+                placeholder="Tell us what's on your mind..."
+                className="flex-1 bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-black transition-colors resize-none placeholder-neutral-400"
               />
             </div>
-          </div>
 
-          {/* Subject */}
-          <div className="flex flex-col gap-2 mt-4">
-            <label className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-neutral-500">
-              <LuTag size={12} /> Subject
-            </label>
-            <input
-              type="text"
-              placeholder="What's this about?"
-              className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-black transition-colors placeholder-neutral-400"
-            />
-          </div>
-
-          {/* Message */}
-          <div className="flex flex-col gap-2 mt-4 flex-1">
-            <label className="flex items-center gap-1.5 text-[11px] font-medium tracking-widest uppercase text-neutral-500">
-              <LuMessageSquare size={12} /> Message
-            </label>
-            <textarea
-              rows={6}
-              placeholder="Tell us what's on your mind..."
-              className="flex-1 bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-black transition-colors resize-none placeholder-neutral-400"
-            />
-          </div>
-
-          {/* Submit Row */}
-          <div className="flex items-center justify-between mt-5 pt-4 border-t border-neutral-100">
-            <p className="flex items-center gap-1.5 text-xs text-neutral-500">
-              <IoLockClosedOutline size={13} /> Reply within 24 hours
-            </p>
-            <Button
-              content="Send"
-              BgColor="#000"
-              Color="white"
-              HoverBg="#171717"
-              HoverColor="white"
-              ArrowColor="white"
-              ArrowHoverColor="white"
-            />
-          </div>
+            {/* Submit Row */}
+            <div className="flex items-center justify-between mt-5 pt-4 border-t border-neutral-100">
+              <p className="flex items-center gap-1.5 text-xs text-neutral-500">
+                <IoLockClosedOutline size={13} /> Reply within 24 hours
+              </p>
+              <Button
+                content={loading ? "Sending..." : "Send"}
+                BgColor="#000"
+                Color="white"
+                HoverBg="#171717"
+                HoverColor="white"
+                ArrowColor="white"
+                ArrowHoverColor="white"
+              />
+            </div>
+          </form>
         </div>
 
         {/* Right: Image */}
@@ -124,25 +163,19 @@ const Contact = () => {
 
       {/* Info Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-
         {data.map(i => (
           <div key={i.id} className="flex items-center gap-3 p-6 border border-neutral-300 rounded-2xl">
-            <div className="w-12 h-12 rounded-lg  flex items-center justify-center shrink-0 border border-gray-500">
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0 border border-gray-500">
               {i.icon}
             </div>
             <div>
-              <span className="block text-sm  uppercase tracking-widest text-neutral-400 mb-0.5">
+              <span className="block text-sm uppercase tracking-widest text-neutral-400 mb-0.5">
                 {i.text}
               </span>
               <p className="text-[15px] font-medium">{i.para}</p>
             </div>
           </div>
-
         ))}
-
-
-
-
       </div>
     </section>
   );
