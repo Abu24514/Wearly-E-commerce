@@ -12,6 +12,8 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import SearchBar from '../components/SearchBar'
 import Verify from '../pages/Verify'
+import FloatingChatButton from '../components/AiAssistant/FloatingChatButton'
+import ChatWindow from '../components/AiAssistant/ChatWindow'
 
 const MainRoutes = () => {
   return (
@@ -33,6 +35,8 @@ const MainRoutes = () => {
         </Routes>
       </div>
       <Footer />
+      <FloatingChatButton />  
+      <ChatWindow />      
     </>
   )
 }
